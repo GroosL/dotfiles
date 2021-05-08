@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+#
+# Script name: dmqute
+# Description: Search your qutebrowswer bookmarks and quickmarks.
+# Dependencies: dmenu, qutebrowser
+# GitLab: https://www.gitlab.com/dwt1/dmscripts
+# License: https://www.gitlab.com/dwt1/dmscripts/LICENSE
+# Contributors: Derek Taylor
+#               Simon Ingelsson
+
+set -euo pipefail
+
+config="${HOME}/.config/dmscripts/config"
+# No issues should arrise since it won't even be sourced if the file doesn't exist
+# shellcheck disable=SC1090	
+[ -f "${config}" ] && source "${config}"
+
+: "${DMBROWSER:=qutebrowser}"
+: "${DMBROWSER_SHOW:=1}"
+
+_hist_cache_file="${HOME}/.cache/dmbrowserhistory"
+
+# A separator that will appear in between quickmarks, bookmarks and history urls.
+_separator="----------"
+
+# Defining location of bookmarks file
+_bookmark_file="$HOME/.config/qutebrowser/bookmarks/urls"
+# Defining location of quickmarks file
+_quickmarks_file="$HOME/.config/qutebrowser/quickmarks"
+
+# Do query against sqlite3 database expecting two columns (title, url)
+# args "file" "query"
+function cacheHistory() {
+  sqlite_separator='=%='
+  file=${1}
+  query=${2}
+  [[ ${DMBROWSER_SHOW} -eq 1 ]] && browser=${3-} || browser=""
+
+  sqlCmd="sqlite3 -separator ${sqlite_separator}"
+  printf '%s\n' "$(${sqlCmd} "${file}" "${query}")" | \
+  awk -F "${sqlite_separator}" -v browser="${browser} " '{print browser""$1" - "$NF}' >> "${_hist_cache_file}"
+}
+
+# Wrap getting history so we can call it only if the cache is old
+generateHistory() {
+  if [[ -f "${_hist_cache_file}.sorted" ]]; then
+    if [ $(( $(date +%s) - $(date +%s -r "${_hist_cache_file}.sorted") )) -lt 180 ]; then
+      return 0
+    fi
+  fi
+  # Make sure cache is empty and exists
+  echo -n "" > "${_hist_cache_file}"
+
+  _chromium_history="$HOME/.config/chromium/Default/History"
+  if [[ -f ${_chromium_history} ]]; then
+    SQL="SELECT title, url FROM urls where url like 'http%';"
+    cacheHistory "${_chromium_history}" "${SQL}" "(chromium)"
+  fi
+
+  _brave_history="$HOME/.config/BraveSoftware/Brave-Browser/Default/History"
+  if [[ -f ${_brave_history} ]]; then
+    SQL="SELECT title, url FROM urls where url like 'http%';"
+    cacheHistory "${_brave_history}" "${SQL}" "(brave)"
+  fi
+
+  _qutebrowser_history="$HOME/.local/share/qutebrowser/history.sqlite"
+  if [[ -f ${_qutebrowser_history} ]]; then
+    SQL="SELECT title, url FROM history where url like 'http%';"
+    cacheHistory "${_qutebrowser_history}" "${SQL}" "(qutebrowser)"
+  fi
+
+  if [[ -d ~/.mozilla/firefox ]]; then 
+    SQL="PRAGMA encoding='UTF-8'; select p.title,p.url from moz_historyvisits as h, moz_places as p where p.id == h.place_id order by url"
+    cd ~/.mozilla/firefox ;
+    for db in */places.sqlite; do
+      DB=$(realpath "${db}")
+      cacheHistory "${DB}" "${SQL}" "(firefox)"
+    done
+  fi
+
+  # reverse each line and then sorting on url making sure they are uniq then restoring the lines
+  rev "${_hist_cache_file}" | sort -u -t' ' -r -k1,1 |rev | sort  > "${_hist_cache_file}.sorted"
+}
+generateHistory
+
+# Read array of options to choose.
+readarray -t bmarks < "${_bookmark_file}"
+readarray -t qmarks < "${_quickmarks_file}"
+
+# Sort the bookmark and quickmark lists so that the url is the last field.
+# We will awk print the last field later.
+# History list is formed by grep'ing "http" from the history table.
+bmlist=$(printf '%s\n' "${bmarks[@]}" | awk '{print $2" - "$1}')
+qmlist=$(printf '%s\n' "${qmarks[@]}" | awk '{print "["$1"] - "$NF}' | sort)
+histlist=$(cat "${_hist_cache_file}.sorted" )
+
+# Piping the lists into dmenu.
+# We use "printf '%s\n'" to format the array one item to a line.
+# The urls are listed quickmarks first, then the _separator, and then bookmarks and lastly history
+choice=$(printf '%s\n' "$qmlist" "$_separator" "$bmlist" "$_separator" "$histlist" | dmenu -i -l 20 -p 'Qutebrowser open:' "$@" ) || exit
+
+# What to do if the separator is chosen from the list.
+# We simply launch qutebrowser without any url arguments.
+# shellcheck disable=SC2154
+if [ "$choice" == "$_separator" ]; then
+    nohup "${DMBROWSER}" >/dev/null 2>&1 &
+# What to do when/if we choose a url to view.
+elif [ "$choice" ]; then
+  url=$(echo "${choice}" | awk '{print $NF}') || exit
+  nohup "${DMBROWSER}" "$url" >/dev/null 2>&1 &
+# What to do if we just escape without choosing anything.
+else
+    echo "Program terminated." && exit 0
+fi

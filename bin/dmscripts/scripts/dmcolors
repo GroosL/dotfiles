@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# Script name: dmcolors
+# Description: Copy a color to your clipboard using dmenu, change the colors if needed
+# Dependencies: dmenu, xclip
+# GitLab: https://www.gitlab.com/dwt1/dmscripts
+# License: https://www.gitlab.com/dwt1/dmscripts/LICENSE
+# Contributors: sloopy3333
+#               Simon Ingelsson 
+#               HostGrady 
+
+# Set with the flags "-e", "-o pipefail" cause the script to fail
+# if certain things happen, which is a good thing.  Otherwise, we can
+# get hidden bugs that are hard to discover.
+set -euo pipefail
+
+# Defining the terminal emulator to use.
+config="${HOME}/.config/dmscripts/config"
+# No issues should arrise since it won't even be sourced if the file doesn't exist
+# shellcheck disable=SC1090
+[ -f "${config}" ] && source "${config}"
+
+if [[ ! "$(declare -p colors 2>/dev/null)" == "declare -A"* ]] ; then 
+  declare -A colors
+  colors[black]="#282a36"
+  colors[red]="#ff5555"
+  colors[green]="#5af78e"
+  colors[yellow]="#f1fa8c"
+  colors[blue]="#57c7ff"
+  colors[magenta]="#ff6ac1"
+  colors[cyan]="#8be9fd"
+  colors[white]="#f1f1f0"
+  colors[orange]="#ffb86c"
+  colors[purple]="#bd9cf9"
+fi
+
+selected="$(printf '%s\n' "${!colors[@]}" | dmenu -p "color:")"
+[ -z "${selected}" ] && exit
+echo "${colors["${selected}"]}" | xclip -r -selection clipboard
+

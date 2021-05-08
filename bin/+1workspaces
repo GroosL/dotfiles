@@ -1,0 +1,28 @@
+#!/bin/bash
+
+
+if wmctrl -d | grep '0' | grep '*' > /dev/null; then
+	wmctrl -s 1 
+
+elif wmctrl -d | grep '1' | grep '*' > /dev/null; then
+	wmctrl -s 2 
+
+elif wmctrl -d | grep '2' | grep '*' > /dev/null; then
+	wmctrl -s 3 
+
+elif wmctrl -d | grep '3' | grep '*' > /dev/null; then
+	wmctrl -s 4
+
+elif wmctrl -d | grep '4' | grep '*' > /dev/null; then
+	wmctrl -s 5
+
+elif wmctrl -d | grep '5' | grep '*' > /dev/null; then
+	wmctrl -s 6
+
+elif wmctrl -d | grep '6' | grep '*' > /dev/null; then
+	wmctrl -s 7
+
+else
+	notify-send ruim
+
+fi

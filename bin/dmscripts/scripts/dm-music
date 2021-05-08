@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+# script name: dm-music
+
+# Author: Murtaza Udaipurwala
+
+# Description:
+# - Music player using dmenu
+# - A simpler alternative to music players like ncmpcpp, moc, cmus
+# - Uses mpd in the backend
+
+# Features
+# - Select and play music from mpd music directory
+# - Queue a playlist
+
+# Dependencies:
+# 1. dmenu
+# 2. mpd(music player daemon)
+# 3. mpc(terminal command to access mpd)
+
+# Sample mpd config to be placed in $HOME/.config/mpd/mpd.conf
+# music_directory		"~/music"
+# playlist_directory	"~/.local/share/mpd/playlists" # This directory needs to be created manually
+# auto_update "yes"
+# bind_to_address "127.0.0.1"
+# restore_paused "yes"
+# max_output_buffer_size "16384"
+
+# audio_output {
+# 	type "pulse"
+# 	name "pulse"
+# }
+
+# audio_output {
+#        type	"fifo"
+#        name	"Visualizer feed"
+#        path	"/tmp/mpd.fifo"
+#        format	"44100:16:2"
+# }
+
+# Set with the flags "-e", "-u","-o pipefail" cause the script to fail
+# if certain things happen, which is a good thing.  Otherwise, we can
+# get hidden bugs that are hard to discover.
+set -euo pipefail
+
+help(){
+    printf "Run dm-music without any arguments for all available music\n
+    dm-music [options]
+    -h\tdisplays this help page
+    -q\tQueue a playlist
+    -p\tSelect music for the queued playlist\n
+    ### Some useful mpc command
+    mpc toggle\t\t\ttoggle between pause and play state
+    mpc next\t\t\tgo to next track
+    mpc prev\t\t\tgo to prev track
+    mpc seekthrough +00:00:10\tseek 10s forward
+    mpc seekthrough -00:00:10\tseek 10s backward\n"
+}
+
+play(){
+    mpc crop > /dev/null 2>&1
+    music="$(mpc listall | dmenu -i -l 10 -p "Music to play")" || exit
+    mpc -q add "$music"
+    mpc del 0 > /dev/null 2>&1
+    mpc play
+    mpc repeat on
+}
+
+queuePlaylist(){
+    playlist="$(mpc lsplaylists | dmenu -i -l 10 -p "Your playlists")" || exit
+    mpc -q clear
+    mpc load "$playlist"
+    mpc -q play 1
+    echo "$playlist" > "${HOME}/.cache/current_playlist"
+}
+
+currentPlaylist(){
+    playlist="$(cat "${HOME}/.cache/current_playlist")"
+    music_list="$(mpc playlist "${playlist}")"
+    music="$(echo "${music_list}" | dmenu -i -l 10 -p "Music to play")" || exit
+    mpc -q clear
+    mpc load "${playlist}" > /dev/null 2>&1
+    mpc play "$(echo "${music_list}" | awk -v pattern="$music" '$0 ~ pattern { print NR; exit }')"
+}
+
+noOpt=1
+while getopts "hqp" arg 2>/dev/null; do
+    case "${arg}" in
+        h) help ;;
+        q) queuePlaylist ;;
+        p) currentPlaylist ;;
+        *) printf "invalid option\nType dm-music -h for help\n" ;;
+    esac
+    noOpt=0
+done
+[ $noOpt = 1 ] && play

@@ -1,0 +1,53 @@
+#+TITLE: dmscripts
+#+AUTHOR: Derek Taylor (https://gitlab.com/dwt1/dmscripts)
+
+* NAME
+dmscripts - a collection of various dmenu scripts
+
+* DESCRIPTION
+dmscripts are a collection of dmenu scripts written in bash.  each script is written and contributed by DT or viewers.
+
+* SCRIPTS
+** dmhub
+The hub script, allows easy access to other scripts.
+** dm-setup
+The installation script, installs all dependencies minus a few.
+** dman
+A manual page searcher, search a man page or randomly view one.
+** dmcolors
+Find the hex value of a color you are searching for.
+** dmconf
+A configuration manager, find and edit any config file you need.
+** dmkill
+Simple process killer, find and kill misbehaving processes.
+** dmlogout
+Simple logout menu, choose to lock, shutdown, reboot or logout of your computer.
+** dm-music
+Dmenu based music player.
+** dm-pacman
+Uses dmenu as a simple software store, only supports Arch based distros.
+** dmqute
+A bookmark searching tool, search through all qutebrowser quickmarks and bookmarks.
+** dmred
+A reddit viewer using dmenu, still a work in progress.
+** dmscrot
+A GUI to maim using dmenu.
+** dmsearch
+Web searching utility using dmenu.
+** dmsounds
+Choose a ambient background sound to play.
+** dm-usbmount
+USB mounting done suckless, no need for bloated daemons. 
+** dmwall
+Using dmenu, setup a wallpaper.
+
+* USAGE
+** bash dmhub
+Runs the dmhub program which allows for easy access to the scripts.
+** bash path/to/script
+Runs the script specified without using dmhub. 
+** ./path/to/script
+Same as bash path/to/script.
+
+* AUTHOR
+Derek Taylor (https://gitlab.com/dwt1/dmscripts) 
