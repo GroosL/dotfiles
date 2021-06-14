@@ -15,7 +15,7 @@
 # full_circle     full_square     full_rounded     full_alt
 # row_circle      row_square      row_rounded      row_alt
 
-theme="column_alt"
+theme="full_alt"
 dir="$HOME/.config/rofi/powermenu"
 
 # random colors
@@ -89,7 +89,7 @@ case $chosen in
     $suspend)
 		ans=$(confirm_exit &)
 		if [[ $ans == "yes" || $ans == "YES" || $ans == "y" || $ans == "Y" ]]; then					
-			suspender
+			xset dpms force off && i3lock-fancy
 		elif [[ $ans == "no" || $ans == "NO" || $ans == "n" || $ans == "N" ]]; then
 			exit 0
         else

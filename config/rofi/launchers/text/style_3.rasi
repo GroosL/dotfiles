@@ -107,19 +107,19 @@ element normal.urgent {
     text-color:       				@red;
 }
 element normal.active {
-    background-color: 				@green;
+    background-color: 				@sg;
     text-color:       				@bg;
 }
 element selected.normal {
-    background-color: 				@fg;
+    background-color: 				@sg;
     text-color:       				@bg;
 }
 element selected.urgent {
-    background-color: 				@bg;
+    background-color: 				@sg;
     text-color:       				@red;
 }
 element selected.active {
-    background-color: 				@fg;
+    background-color: 				@sg;
     text-color:       				@bg;
 }
 element alternate.normal {
