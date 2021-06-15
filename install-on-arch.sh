@@ -11,12 +11,17 @@ fi
 
 # Packages
 QTILE(){
-	paru --noconfirm -S xorg qtile kitty psuinfo tint2 picom-jonaburg-git firefox neofetch pavucontrol ttf-font-awesome terminus-font zsh neovim cmus ranger clyrics lsd doas doas-sudo rofi rofi-dmenu redshift bat wmctrl feh nitrogen >/dev/null 2&>1 
-	cp dotfiles/config $HOME/.config;
+	paru --noconfirm -S xorg qtile i3lock-fany-git kitty psuinfo tint2 picom-jonaburg-git firefox neofetch pavucontrol ttf-font-awesome terminus-font zsh neovim cmus ranger clyrics lsd doas doas-sudo rofi rofi-dmenu redshift bat wmctrl feh nitrogen >/dev/null 2&>1 
+	cp -r dotfiles/config/qtile $HOME/.config/qtile
+	cp -r dotfiles/config/tint2 $HOME/.config/tint2
+	cp -r dotfiles/config/rofi $HOME/.config/tint2
+	cp -r dotfiles/config/kitty $HOME/.config/kitty
+	cp -r dotfiles/config/picom $HOME/.config/picom
+	cp -r dotfiles/gtk-* $HOME/.config
 	cp dotfiles/.vimrc $HOME/.vimrc
 	cp -r dotfiles/.oh-my-zsh/ $HOME/.oh-my-zsh
 	cp -r dotfiles/bin $HOME/bin
-	cp dotfiles/.zshrc $HOME/.zshrc
+	cp dotfiles/.zshrc $HOME/.zshrc;
 }
 
 # Colors
