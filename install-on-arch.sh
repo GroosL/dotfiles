@@ -17,7 +17,6 @@ QTILE(){
 	cp -r dotfiles/.oh-my-zsh/ $HOME/.oh-my-zsh
 	cp -r dotfiles/bin $HOME/bin
 	cp dotfiles/.zshrc $HOME/.zshrc
-	cp -r dotfiles/Pictures/Wallpapers $HOME/Pictures/Wallpapers
 }
 
 # Colors
