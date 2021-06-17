@@ -65,7 +65,7 @@ echo '[chaotic-aur]' >> /etc/pacman.conf
 echo 'Include = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf
 sudo pacman --noconfirm -Syy >/dev/null 2>&1
 echo "Done"
-echo"==========================================="
+echo "==========================================="
 
 echo "Cloning the repository"
 git clone https://github.com/GroosL/dotfiles/ > /dev/null 2>&1
