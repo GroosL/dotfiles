@@ -1,0 +1,1 @@
+("/home/leonardo/.emacs.d/recentf" "/home/leonardo/.emacs.d/init.el")
