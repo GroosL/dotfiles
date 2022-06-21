@@ -1,0 +1,9 @@
+[colors]
+
+background = #0f1013
+foreground = #FFFFFF
+primary = #8C3D45
+secondary = #D05156
+alert = #FF0000
+
+workspaces = #B04A4F

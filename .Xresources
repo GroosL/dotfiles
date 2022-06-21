@@ -1,0 +1,32 @@
+! Colors
+#include ".Xresources.d/catppuccin"
+
+! Urxvt
+urxvt.font: xft:Terminus (TTF):style=Regular,xft:MesloLGS NF:pixelsize=12
+urxvt.scrollBar: false
+URxvt.perl-ext: default,url-select
+URxvt.keysym.M-l: perl:url-select:select_next
+URxvt.url-select.launcher: /usr/bin/brave
+URxvt.url-select.underline: true
+URxvt.underlineColor: #80A0C0
+! URxvt.borderless: 1
+! URxvt.secondaryScreen: 1
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+URxvt.keysym.Control-Meta-c: builtin-string:
+URxvt.keysym.Control-Meta-v: builtin-string:
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+URxvt.keysym.M-k: command:\033]720;1\007
+URxvt.keysym.M-j: command:\033]721;1\007
+URxvt.internalBorder: 50 
+!URxvt.depth: 32
+!URxvt.background: rgba:0000/0000/0200/c800
+URxvt.visualBell: false 
+
+! St
+st.alpha: 0.9
+
+! Random configs
+! Xcursor.theme: tetris
+Xcursor.size: 16

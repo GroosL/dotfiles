@@ -1,0 +1,13 @@
+#!/bin/sh
+exec dwmblocks &
+exec /usr/bin/numlockx on &
+exec /usr/local/bin/picom -b --animations --animation-window-mass 0.5 --animation-for-open-window zoom --animation-stiffness 350 &
+exec /usr/lib/kdeconnectd &
+exec dunst &
+#exec i2prouter start &
+exec xwallpaper --stretch /home/leonardo/HDD/BackupArch/Pictures/Wallpapers/wp5865675-retro-futurism-wallpapers.jpg &
+exec urxvtd --quiet --opendisplay --fork &
+exec emacs --daemon &
+#exec monerod --config-file /home/leonardo/zdata/crypto/monero/bitmonero.conf &
+exec xinput set-prop 13 291 0, 0, 1 &
+# exec xautolock -time 3 -locker slock &

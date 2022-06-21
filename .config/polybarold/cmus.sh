@@ -1,0 +1,25 @@
+#!/bin/bash
+
+prepend_zero () {
+        seq -f "%02g" $1 $1
+}
+
+artist=$(echo -n $(cmus-remote -C status | grep "tag artist" | cut -c 12-))
+
+paused=$(cmus-remote -C status | grep paused | awk '{for(i=1;i<=NF;i++){ $i=toupper(substr($i,1,1)) substr($i,2) }}1 {print $2}')
+
+if [[ $paused = *[!\ ]* ]]; then
+		echo -n "Paused"
+
+elif [[ $artist = *[!\ ]* ]]; then
+		song=$(echo -n $(cmus-remote -C status | grep title | cut -c 11-))
+        position=$(cmus-remote -C status | grep position | cut -c 10-)
+        minutes1=$(prepend_zero $(($position / 60)))
+        seconds1=$(prepend_zero $(($position % 60)))
+        duration=$(cmus-remote -C status | grep duration | cut -c 10-)
+        minutes2=$(prepend_zero $(($duration / 60)))
+        seconds2=$(prepend_zero $(($duration % 60)))
+        echo -n "$song [$minutes1:$seconds1/$minutes2:$seconds2]"
+else
+        echo
+fi
