@@ -1,1 +1,0 @@
-~/Tools/redditimages/bulk-downloader-for-reddit --directory /home/leonardo/.config/eww/ --subreddit pics --limit 1 --sort top --time day > filename.txt

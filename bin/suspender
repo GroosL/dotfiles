@@ -1,5 +1,0 @@
-#!/bin/bash
-
-exec i3lock-fancy & 
-exec sleep 60 &
-exec xset dpms force off &

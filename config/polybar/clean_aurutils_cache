@@ -1,3 +1,0 @@
-#!/bin/bash
-
-find ~/.cache/aurutils/sync/ -type d -name .git -execdir git clean -xf \;

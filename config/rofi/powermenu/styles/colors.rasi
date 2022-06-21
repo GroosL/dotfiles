@@ -1,9 +1,0 @@
-/* colors */
-
-* {
-  selected:  #98c379;
-  background:  #1C2330;
-  background-alt:  #2e3440;
-  border:  #61afef;
-  foreground:  #d08770;
-}
